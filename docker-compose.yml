@@ -26,15 +26,15 @@ services:
       CLUSTER_HOSTNAME: 'node1'
     networks:
       - api_db_net
-  mongo_db:
-    image: mongo:latest
-    volumes:
-      - ./db_mongo:/data/db
-    ports:
-      - "27017:27017"
-    restart: always
-    networks:
-      - api_db_net
+#  mongo_db:
+#    image: mongo:latest
+#    volumes:
+#      - ./db_mongo:/data/db
+#    ports:
+#      - "27017:27017"
+#    restart: always
+#    networks:
+#      - api_db_net
   input_processor_api:
     container_name: input_processor_api
     build:
@@ -47,9 +47,10 @@ services:
       - "8000:80"
     depends_on:
       - vector_db
-      - mongo_db
+#      - mongo_db
     volumes:
       - ./app:/code/app
+      - ./logs:/code/logs
 networks:
   api_db_net:
     driver: bridge

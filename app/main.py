@@ -1,7 +1,8 @@
 import tkinter as tk
-from app.src.KeyListener import KeyListener
+
 from dotenv import load_dotenv
 
+from app.src.KeyListener import KeyListener
 from src.buttons.Start import StartButton
 from src.buttons.Stop import StopButton
 
@@ -49,7 +50,6 @@ stop_button.grid(row=0, column=2, sticky='new')
 # Now grid the start button and pass the stop button to it
 start_button.stop_button = stop_button
 start_button.grid(row=0, column=1, sticky='new')
-
 
 # Create more buttons
 button2 = tk.Button(root, text='Daily summary')

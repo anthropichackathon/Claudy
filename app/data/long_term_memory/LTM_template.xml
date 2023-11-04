@@ -1,0 +1,9 @@
+<long_term_memory>
+    <context>
+        This is a long-term memory of the AI assistant. It is used to store information that will be passed to the vector database. Each chunk is a piece of information that will be stored in the vector database.
+    </context>
+    <chunks>
+        <chunk></chunk>
+        <chunk></chunk>
+    </chunks>
+</long_term_memory>

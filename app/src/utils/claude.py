@@ -1,5 +1,10 @@
-from anthropic import Anthropic
 import os
+
+from anthropic import Anthropic
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 def get_anthropic():
     """Setup anthropic client"""
@@ -9,7 +14,7 @@ def get_anthropic():
     return anthropic
 
 
-def claude_call(llm_setup, prompt, model="claude-2", max_tokens = 300, **kwargs):
+def claude_call(llm_setup, prompt, model="claude-2", max_tokens=300, **kwargs):
     """Call Claude API"""
     response = llm_setup.completions.create(
         model=model,

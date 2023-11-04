@@ -1,0 +1,56 @@
+version: '3.9'
+services:
+  vector_db:
+    container_name: vector_db
+    image: semitechnologies/weaviate:1.18.3
+    command:
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "28080"
+      - --scheme
+      - http
+    ports:
+      - "28080:28080"
+    expose:
+      - "28080"
+    restart: on-failure:0
+    volumes:
+      - ./db_vector:/var/lib/weaviate
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: 'none'
+      ENABLE_MODULES: ''
+      CLUSTER_HOSTNAME: 'node1'
+    networks:
+      - api_db_net
+#  mongo_db:
+#    image: mongo:latest
+#    volumes:
+#      - ./db_mongo:/data/db
+#    ports:
+#      - "27017:27017"
+#    restart: always
+#    networks:
+#      - api_db_net
+  input_processor_api:
+    container_name: input_processor_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0 --port 80 --reload
+    networks:
+      - api_db_net
+    ports:
+      - "8000:80"
+    depends_on:
+      - vector_db
+#      - mongo_db
+    volumes:
+      - ./app:/code/app
+      - ./logs:/code/logs
+networks:
+  api_db_net:
+    driver: bridge

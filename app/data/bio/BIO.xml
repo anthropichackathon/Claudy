@@ -1,0 +1,10 @@
+<bio>
+    <context>
+        This section contains the information about the user.
+    </context>
+    <personal_background>I am 30 years old.</personal_background>
+    <professional_background>I work as accountant.</professional_background>
+    <name>John</name>
+    <life_goals>My goal is to become professional chef.</life_goals>
+    <other_info>My favorite color is blue, and I like to play tennis.</other_info>
+</bio>

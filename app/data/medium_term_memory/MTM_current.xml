@@ -1,0 +1,13 @@
+<medium_term_memory>
+    <context>
+        This is a medium term memory of the AI assistant. It is used to store the general information regarding the closer future. The memory contains 3 defined topics.
+    </context>
+    <to_do_list>
+- Paint living room  
+- Go to the vet with my dog
+    </to_do_list>
+    <goals_with_deadlines></goals_with_deadlines>
+    <reminders>
+- My mam is sick    
+    </reminders>
+</medium_term_memory>

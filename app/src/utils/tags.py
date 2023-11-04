@@ -19,6 +19,5 @@ def extract_chunks(claude_response):
     lt_mem_content = get_tag_content(claude_response, "chunks")
     # Change the format of the long term memory into the list of chunks (each chunk is a string)
     lt_mem_content = lt_mem_content.split("<chunk>")[1:]
-    lt_mem_content = [chunk.split("</chunk>")[0] for chunk in lt_mem_content]
+    lt_mem_content = [chunk.split("</chunk>")[0].strip() for chunk in lt_mem_content]
     return lt_mem_content
-

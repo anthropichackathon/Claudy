@@ -12,7 +12,6 @@ def bio_update(claude_response):
     # Insert the content between the tags in the bio template
     for tag in bio_tags:
         bio_template = tags.insert_between_tags(bio_template, tag, bio[tag])
-    print(bio_template)
 
     # Save the filled templates to the files
     with open("../data/bio/BIO.xml", "w") as f:
@@ -50,7 +49,6 @@ def mtm_update(claude_response):
     # Fill the template of the medium term memory
     for tag in mt_mem_tags:
         mtm_template = tags.insert_between_tags(mtm_template, tag, mt_mem_content[tag])
-    print(mtm_template)
 
     # Save the filled templates to the files
     with open("../data/medium_term_memory/MTM_current.xml", "w") as f:

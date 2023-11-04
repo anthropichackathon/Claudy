@@ -45,20 +45,25 @@ class LongTermKnowledge:
         self.embedding_deployment_name = os.getenv("EMBEDDING_DEPLOYMENT_NAME")
 
     async def retrieve_info(self, payload: QueryPayload) -> dict:
-        query = payload.query
-        top_k = payload.top_k
+        try:
+            query = payload.query
+            top_k = payload.top_k
 
-        embedding = get_embedding(query, engine=self.embedding_deployment_name)
-        vec = {"vector": embedding}
+            embedding = get_embedding(query, engine=self.embedding_deployment_name)
 
-        db_result = query_db(
-            db_client=self.client,
-            class_name=self.class_name,
-            vec=vec,
-            top_k=top_k,
-            columns=["content", "vec_id", "date"]
-        )
-        return {"result": db_result}
+            # Create a list to store similarity scores
+            similarities = []
+            for _, row in self.db.get_df().iterrows():
+                similarity = calculate_cosine_similarity(row['embedding'], embedding)
+                similarities.append((row['content'], row['vec_id'], row['date'], similarity))
+
+                # Sort by similarity and get the top k results
+            similarities.sort(key=lambda x: x[3], reverse=True)
+            top_results = similarities[:top_k]
+
+            return {"result": top_results}
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=str(e))
 
     async def get_class_count(self) -> dict:
         try:
@@ -111,7 +116,7 @@ class LongTermKnowledge:
 
     async def reset_schema(self) -> dict:
         try:
-            self.db = pd.DataFrame(columns=["content", "vec_id", "date"])
+            self.db = pd.DataFrame(columns=["content", "vec_id", "date", "embedding"])
             return {"message": "Class deleted"}
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))

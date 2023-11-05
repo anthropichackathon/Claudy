@@ -15,7 +15,7 @@ llm_setup = claude.get_anthropic()
 
 DATA_ROOT = "data/"
 
-def run(processed_input: str):
+def run(processed_input: str, logger):
     decision_response = claude.claude_call(
         llm_setup,
         prompts.decision_prompt(processed_input),
@@ -33,31 +33,31 @@ def run(processed_input: str):
     # Create retrieve query
     try:
         retrieve_query = tags.get_tag_content(decision_response, "retrieve")
-        print(f"{retrieve_query=}")
+        logger.info(f"{retrieve_query=}")
     except:
         retrieve_query = None
 
     if store_query:
-        print(f"{store_query=}")
-        update_stm(store_query)
-        needs_clean_up = stm_cleanup(db_instance)
+        logger.info(f"{store_query=}")
+        update_stm(store_query, logger)
+        needs_clean_up = stm_cleanup(db_instance, logger)
         if needs_clean_up:
-            update_mtm()
+            update_mtm(logger)
             db_count = len(db_instance.get_df())
             if db_count > 1_000:
-                ltm_reorganization(db_instance)
+                ltm_reorganization(db_instance, logger)
 
     if retrieve_query:
-        final_user_response = retrieve_all_memory(db_instance, retrieve_query)
+        final_user_response = retrieve_all_memory(db_instance, retrieve_query, logger)
     else:
         final_user_response = ""
 
     return final_user_response
 
 
-def update_stm(store_query: str) -> None:
+def update_stm(store_query: str, logger) -> None:
     stm_current = open(f"{DATA_ROOT}/short_term_memory/STM_current.xml", "r").read()
-    print(f"{stm_current=}")
+    logger.info(f"{stm_current=}")
 
     stm_update_response = claude.claude_call(
         llm_setup,
@@ -65,13 +65,13 @@ def update_stm(store_query: str) -> None:
         max_tokens=10_000)
 
     # Update the short term memory
-    print(f"{stm_update_response=}")
+    logger.info(f"{stm_update_response=}")
     update.stm_update(stm_update_response)
 
 
-def stm_cleanup(db_instance) -> bool:
+def stm_cleanup(db_instance, logger) -> bool:
     stm_current = open(f"{DATA_ROOT}/short_term_memory/STM_current.xml", "r").read()
-    print(f"{stm_current=}")
+    logger.info(f"{stm_current=}")
 
     # Check if <slot_7> is filled
     if tags.get_tag_content(stm_current, "slot_7") == "":
@@ -85,7 +85,7 @@ def stm_cleanup(db_instance) -> bool:
             prompts.stm_cleanup_prompt(stm_current),
             max_tokens=10_000
         )
-        print(f"stm_cleanup {response=}")
+        logger.info(f"stm_cleanup {response=}")
 
         # Get the list of chunks for ltm update
         ltm_update = tags.extract_chunks(response)
@@ -93,7 +93,7 @@ def stm_cleanup(db_instance) -> bool:
         # Medium term memory update
         update.mtm_temporary(response)
 
-        print(f"stm {ltm_update_dict=}")
+        logger.info(f"stm {ltm_update_dict=}")
         # overwrite STM_current with STM_template
         stm_template = open(f"{DATA_ROOT}/short_term_memory/STM_template.xml", "r").read()
         with open(f"{DATA_ROOT}/short_term_memory/STM_current.xml", "w") as f:
@@ -103,7 +103,7 @@ def stm_cleanup(db_instance) -> bool:
     return clean_up
 
 
-def update_mtm() -> None:
+def update_mtm(logger) -> None:
     mtm_template = open(f"{DATA_ROOT}/medium_term_memory/MTM_template.xml", "r").read()
     # Check if the mtm_update.xml file exists in the directory
     # If it does, load it
@@ -111,7 +111,7 @@ def update_mtm() -> None:
         mtm_current = open(f"{DATA_ROOT}/medium_term_memory/MTM_current.xml", "r").read()
     else:
         mtm_current = mtm_template
-    print(f"{mtm_current=}")
+    logger.info(f"{mtm_current=}")
 
     # Check if the mtm_update.xml file exists in the directory "../data/short_term_memory/"
     # If it does, load it
@@ -119,7 +119,7 @@ def update_mtm() -> None:
         mtm_update = open(f"{DATA_ROOT}/medium_term_memory/MTM_update.xml", "r").read()
     else:
         mtm_update = None
-    print(f"{mtm_update=}")
+    logger.info(f"{mtm_update=}")
 
     if mtm_update is not None:
         # If the mtm_update.xml file exists, load it into the LLM
@@ -128,14 +128,14 @@ def update_mtm() -> None:
             prompts.mtm_update_promt(mtm_current, mtm_update),
             max_tokens=10_000
         )
-        print(f"{mtm_response=}")
+        logger.info(f"{mtm_response=}")
         # Update the medium term memory
         update.mtm_update(mtm_response)
         # Delete the mtm_update.xml file
         os.remove(f"{DATA_ROOT}/medium_term_memory/MTM_update.xml")
 
 
-def retrieve_all_memory(db_instance, retrieve_query: str) -> str:
+def retrieve_all_memory(db_instance, retrieve_query: str, logger) -> str:
     # Load short-term memory
     if os.path.isfile(f"{DATA_ROOT}/short_term_memory/STM_current.xml"):
         stm_current = open(f"{DATA_ROOT}/short_term_memory/STM_current.xml", "r").read()
@@ -152,16 +152,16 @@ def retrieve_all_memory(db_instance, retrieve_query: str) -> str:
         prompts.retrieve_prompt(retrieve_query),
         max_tokens=300
     )
-    print(f"{ltm_query=}")
+    logger.info(f"{ltm_query=}")
 
     # Get the optimized query
     optimized_query = tags.get_tag_content(ltm_query, "optimized_query")
-    print(f"{optimized_query=}")
+    logger.info(f"{optimized_query=}")
 
     # Get the search result
     search_result = db_instance.semantic_search(optimized_query, top_k=20)
     content_results = [el[0] for el in search_result]
-    print(f"{content_results=}")
+    logger.info(f"{content_results=}")
 
     # Connect all memories into one string
     all_memories = stm_current + mtm_current + f"\n<long_term_memory>{content_results}</long_term_memory>"
@@ -173,23 +173,23 @@ def retrieve_all_memory(db_instance, retrieve_query: str) -> str:
         prompts.output_processing_prompt(bio, all_memories, retrieve_query),
         max_tokens=10_000
     )
-    print(f"{final_user_response=}")
+    logger.info(f"{final_user_response=}")
 
     return final_user_response
 
-def ltm_reorganization(db_instance) -> None:
+def ltm_reorganization(db_instance, logger) -> None:
     latest_results = db_instance.get_latest_data()
     latest_content = [f"{idx + 1}. {el[0]}" for idx, el in enumerate(latest_results)]
     latest_content = "\n".join(latest_content)
     latest_ids = [el[1] for el in latest_results]
-    print(f"{latest_content=}")
+    logger.info(f"{latest_content=}")
 
     response = claude.claude_call(
         llm_setup,
         prompts.ltm_cleanup_prompt(latest_content),
         max_tokens=10_000
     )
-    print(f"ltm {response=}")
+    logger.info(f"ltm {response=}")
     # Get the list of chunks for ltm update
     ltm_update = tags.extract_chunks(response)
     ltm_update_dict = [{"content": chunk} for chunk in ltm_update]

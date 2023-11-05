@@ -4,6 +4,7 @@ import tkinter as tk
 import pyperclip
 from pynput import keyboard
 
+from src.logger.basic_logger import Logger
 from src.processors.decision_maker import run as run_decision_maker
 from src.processors.first_round import run as run_bio
 from src.utils.tags import get_tag_content
@@ -36,21 +37,25 @@ def new_window_function():
 
 
 root = tk.Tk()
-w = 480
+w = 640
 h = 480
 root.geometry(f"{w}x{h}")
 
 root.withdraw()
 
 output_text = tk.Text(root, state=tk.DISABLED)
-output_text.grid(row=3, column=0, sticky='nsew')
+output_text.grid(row=0, column=0, sticky='nsew')
 
 input_text = tk.Entry(root)
-input_text.grid(row=4, column=0, sticky='nsew')
+input_text.grid(row=1, column=0, sticky='nsew')
 
-root.grid_rowconfigure(3, weight=1)
-root.grid_rowconfigure(4, weight=1)
+log_text = tk.Text(root, state='disabled')
+log_text.grid(row=0, column=1, rowspan=2, sticky='nsew')
+
+root.grid_rowconfigure(0, weight=1)
+root.grid_rowconfigure(1, weight=1)
 root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=1)
 
 input_text.focus_set()
 
@@ -72,12 +77,14 @@ def backend_function(event):
     output_text.insert(tk.END, "Thinking...\n")
     output_text.config(state=tk.DISABLED)
     input_text.delete(0, 'end')
-    thread = threading.Thread(target=run_function, args=(input_val,))
+    thread = threading.Thread(target=run_function, args=(input_val, logger))
     thread.start()
 
 
-def run_function(input_val):
-    res = get_tag_content(run_decision_maker(input_val), "response")
+def run_function(input_val, logger):
+    res = get_tag_content(run_decision_maker(input_val, logger.logger), "response")
+    if not res:
+        res = "I don't know what to say"
     assistant_response = "\nAssistant: " + res
     output_text.config(state=tk.NORMAL)
     output_text.delete("1.0", tk.END)
@@ -130,6 +137,8 @@ listener = keyboard.Listener(on_press=on_press, on_release=on_release)
 listener.start()
 
 input_text.bind('<Return>', backend_function)
+
+logger = Logger(log_text)
 
 # This is the new line to intercept the "X" button
 root.protocol("WM_DELETE_WINDOW", toggle_app_window)

@@ -1,6 +1,6 @@
-import datetime
 import logging
-import os
+
+from src.utils.text_handler import TextHandler
 
 
 class SingletonType(type):
@@ -12,16 +12,16 @@ class SingletonType(type):
         return cls._instances[cls]
 
 
-class Logger(metaclass=SingletonType):
-    def __init__(self):
+class Logger:
+    def __init__(self, text_widget):
+        handler = TextHandler(text_widget)
         logging.basicConfig(
             level=logging.INFO,
             format='%(asctime)s - %(filename)s - %(levelname)s - %(message)s',
-            handlers=[logging.StreamHandler()]
+            handlers=[handler]
         )
         self.logger = logging.getLogger(__name__)
         self.logger.info("Start of new logging session.")
-
 
     def get_logger(self):
         return self.logger

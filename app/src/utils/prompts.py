@@ -1,6 +1,8 @@
 from anthropic import HUMAN_PROMPT, AI_PROMPT
+import os
 
-data_root = "../../data"
+# print(os.listdir("data"))
+data_root = "data"
 short_term_memory_template = open(f"{data_root}/short_term_memory/STM_template.xml", "r").read()
 medium_term_memory_template = open(f"{data_root}/medium_term_memory/MTM_template.xml", "r").read()
 long_term_memory_template = open(f"{data_root}/long_term_memory/LTM_template.xml", "r").read()

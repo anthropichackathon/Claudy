@@ -17,7 +17,7 @@ class Logger:
         handler = TextHandler(text_widget)
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(filename)s - %(levelname)s - %(message)s',
+            format='%(levelname)s - %(message)s',
             handlers=[handler]
         )
         self.logger = logging.getLogger(__name__)

@@ -43,13 +43,13 @@ root.geometry(f"{w}x{h}")
 
 root.withdraw()
 
-output_text = tk.Text(root, state=tk.DISABLED)
+output_text = tk.Text(root, state=tk.DISABLED, bg='light gray')
 output_text.grid(row=0, column=0, sticky='nsew')
 
 input_text = tk.Entry(root)
 input_text.grid(row=1, column=0, sticky='nsew')
 
-log_text = tk.Text(root, state='disabled')
+log_text = tk.Text(root, state='disabled', bg='light gray')
 log_text.grid(row=0, column=1, rowspan=2, sticky='nsew')
 
 root.grid_rowconfigure(0, weight=1)
@@ -69,11 +69,11 @@ file_menu.add_command(label="Tell me about yourself", command=new_window_functio
 def backend_function(event):
     input_val = input_text.get().strip()
     output = f"User: {input_val}\n"
-    output_text.config(state=tk.NORMAL)
+    output_text.config(state=tk.NORMAL, bg="light gray")
     output_text.delete("1.0", tk.END)
     output_text.insert(tk.END, output + '\n')
     output_text.insert(tk.END, "Thinking...\n")
-    output_text.config(state=tk.DISABLED)
+    output_text.config(state=tk.DISABLED, bg="light gray")
     input_text.delete(0, 'end')
     thread = threading.Thread(target=run_function, args=(input_val, logger))
     thread.start()

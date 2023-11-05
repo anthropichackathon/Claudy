@@ -30,7 +30,7 @@ def decision_prompt(input):
     prompt = f"""{HUMAN_PROMPT}<user_input>{input}</user_input>
 
 <instruction> You are an AI assistant helping a user manage their personal memory and knowledge base. Your job is to analyze the user's input and determine if they are asking you to retrieve existing information or provide new information to store.
-If the user asks a direct question or requests specific information, return their query wrapped in <retrieve> tags. Use this tag only when you are sure user wants you to retrieve something from their memory.
+If the user asks a direct question or requests specific information, return their query wrapped in <retrieve> tags. When user asks a question, they are asking you to retrieve information from their memory.
 
 If the user provides new information for you to record, return this content wrapped in <store> tags.
 
@@ -82,7 +82,7 @@ Return the updated medium-term memory using the provided template format. Focus 
     return prompt
 
 def output_processing_prompt(bio, memory, user_question):
-    prompt = f"""<user_bio>{bio}</user_bio>
+    prompt = f"""{HUMAN_PROMPT}<user_bio>{bio}</user_bio>
 
 <memory> {memory} </memory> <instruction> You are an AI assistant designed to help users by retrieving relevant information from their personal biography and memory that you have been provided.
 When the user asks you a question, your role is to provide a personalized response based on what you know about them from their bio and memory. Respond only with information contained in the bio and memory - do not make up or guess any additional details.

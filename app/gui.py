@@ -37,7 +37,7 @@ def new_window_function():
 
 
 root = tk.Tk()
-w = 640
+w = 800
 h = 480
 root.geometry(f"{w}x{h}")
 
@@ -56,8 +56,6 @@ root.grid_rowconfigure(0, weight=1)
 root.grid_rowconfigure(1, weight=1)
 root.grid_columnconfigure(0, weight=1)
 root.grid_columnconfigure(1, weight=1)
-
-input_text.focus_set()
 
 menu_bar = tk.Menu(root)
 root.config(menu=menu_bar)
@@ -84,7 +82,7 @@ def backend_function(event):
 def run_function(input_val, logger):
     res = get_tag_content(run_decision_maker(input_val, logger.logger), "response")
     if not res:
-        res = "I don't know what to say"
+        res = "New info saved to memory"
     assistant_response = "\nAssistant: " + res
     output_text.config(state=tk.NORMAL)
     output_text.delete("1.0", tk.END)
@@ -136,11 +134,11 @@ def on_release(key):
 listener = keyboard.Listener(on_press=on_press, on_release=on_release)
 listener.start()
 
+input_text.focus_set()
 input_text.bind('<Return>', backend_function)
 
 logger = Logger(log_text)
 
 # This is the new line to intercept the "X" button
 root.protocol("WM_DELETE_WINDOW", toggle_app_window)
-
 root.mainloop()

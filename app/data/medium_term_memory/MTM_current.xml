@@ -3,12 +3,58 @@
         This is a medium term memory of the AI assistant. It is used to store the general information regarding the closer future. The memory contains 3 defined topics.
     </context>
     <to_do_list>
-            <item>Clean the house</item>
-        </to_do_list>
+        - Take a pottery class and create a full tableware set by August (6 months)
+        - Read 50 new books across different genres by the end of the year (12 months)
+        - Train for and run a 5K race in under 30 minutes by mid-May (4 months)
+        - Learn to play guitar well enough to accompany myself singing by my birthday in March (3 months)
+        - Cook one new exotic cuisine meal per week for the next 3 months to expand my culinary skills
+        - Take beekeeping classes and install my first beehive by spring (6 months)
+        - Achieve conversational fluency in Spanish through daily practice over the next year
+        - Volunteer 200 hours this year by committing 8 hours every weekend (12 months)
+        - Visit 3 new states on a road trip by July (6 months)
+        - Create a portfolio website showcasing my photography within 2 months
+        - Volunteer to walk shelter dogs twice a week for the next 3 months
+        - Master 5 new cocktail recipes per month for the next year
+        - Grow an herb garden with 10+ plant varieties by end of summer (6 months)
+        - Run 2 half marathons this year - one in spring and one in fall (8 months)
+        - Reach intermediate proficiency in French through daily Duolingo lessons by March (4 months)
+        - Knit sweaters as holiday gifts for family and friends by November (10 months) 
+        - Take improv classes and perform in a live show by December (10 months)
+        - Read book on home renovations and remodel my bathroom by May (4 months)
+        - Pack picnic and frisbee for beach day with friends tomorrow
+        - RSVP for the theater group outing on Sunday
+        - Sign up to chaperone the field trip next Thursday
+        - Pick up developed photos to make memory scrapbook
+        - Schedule times to walk the neighbor's dog while they're on vacation
+        - Drop off donations at the homeless shelter downtown
+        - Confirm dinner reservations for anniversary date night
+        - Buy ingredients to bake cookies for the school bake sale
+        - Pick up snacks and refreshments for game night on Friday
+        - Don't forget to send the book club meeting invites today
+        - Visit the Louvre museum in Paris, the largest art museum in the world.
+        - Try the over 200 types of French cheese like Camembert and Brie.
+    </to_do_list>
     <goals_with_deadlines>
-            <goal>Finish project report by Friday</goal>
-        </goals_with_deadlines>
+        - Take a pottery class and create a full tableware set by August (6 months)
+        - Read 50 new books across different genres by the end of the year (12 months)
+        - Train for and run a 5K race in under 30 minutes by mid-May (4 months)
+        - Learn to play guitar well enough to accompany myself singing by my birthday in March (3 months)
+        - Cook one new exotic cuisine meal per week for the next 3 months to expand my culinary skills
+        - Take beekeeping classes and install my first beehive by spring (6 months)
+        - Achieve conversational fluency in Spanish through daily practice over the next year
+        - Volunteer 200 hours this year by committing 8 hours every weekend (12 months)
+        - Visit 3 new states on a road trip by July (6 months)
+        - Create a portfolio website showcasing my photography within 2 months
+        - Grow an herb garden with 10+ plant varieties by end of summer (6 months)
+        - Reach intermediate proficiency in French through daily Duolingo lessons by March (4 months) 
+        - Read book on home renovations and remodel my bathroom by May (4 months)
+    </goals_with_deadlines>
     <reminders>
-            <reminder>Mom's birthday next week</reminder>
-        </reminders>
+        - Master 5 new cocktail recipes per month for the next year
+        - Run 2 half marathons this year - one in spring and one in fall (8 months)
+        - Knit sweaters as holiday gifts for family and friends by November (10 months)
+        - Take improv classes and perform in a live show by December (10 months)
+        - The North Atlantic right whale is an endangered 55 ft whale species needing protection.
+        - The Petronas Twin Towers in Malaysia were once the world's tallest buildings.
+    </reminders>
 </medium_term_memory>

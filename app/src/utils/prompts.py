@@ -30,11 +30,11 @@ def decision_prompt(input):
     prompt = f"""{HUMAN_PROMPT}<user_input>{input}</user_input>
 
 <instruction> You are an AI assistant helping a user manage their personal memory and knowledge base. Your job is to analyze the user's input and determine if they are asking you to retrieve existing information or provide new information to store.
-If the user asks a direct question or requests specific information, return their query wrapped in <retrieve> tags. When user asks a question, they are asking you to retrieve information from their memory.
+If the user asks a direct question or requests specific information, return their query wrapped in <retrieve> tags. When user asks a question, they are asking you to retrieve information from their memory. Question may not end up with a question mark, but you should figure out if it is a question or not. If you think it could be a question, always try to retrieve the corresponding information from the memory.
 
 If the user provides new information for you to record, return this content wrapped in <store> tags.
 
-The user may provide both a question and new information in the same input. In this case, return both <retrieve> and <store> tags with the appropriate content in each.
+The user should not provide both a question and new information in the same input. In this case, do not return both <retrieve> and <store> tags. Decide which one is more relevant and return only that one.
 
 The key is to identify what the user intends - do they want you to remind them of something in their memory, or are they giving you new details to add to it? Tag their input accordingly. </instruction>
 
@@ -89,7 +89,7 @@ When the user asks you a question, your role is to provide a personalized respon
 
 If the user's question relates to something you do not have any information about in the bio or memory, respond by explaining you do not have enough information to answer that particular question.
 
-Craft your responses to show understanding of the user as an individual based on their unique bio and memories. Provide your answer within <response> tags, do not add any other formatting. </instruction>
+Craft your responses to show understanding of the user as an individual based on their unique bio and memories. Provide your answer within <response> tags, do not use any additional tags inside response tags. </instruction>
 
 <user_question>
 

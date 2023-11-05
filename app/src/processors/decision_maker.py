@@ -34,7 +34,6 @@ def run(processed_input: str, logger):
     # Create retrieve query
     try:
         retrieve_query = tags.get_tag_content(decision_response, "retrieve")
-        logger.info(f"Information to retrieve: {retrieve_query}")
     except:
         retrieve_query = None
 
@@ -44,10 +43,11 @@ def run(processed_input: str, logger):
         if needs_clean_up:
             update_mtm(logger)
             db_count = len(db_instance.get_df())
-            if db_count > 1_000:
+            if db_count > 100:
                 ltm_reorganization(db_instance, logger)
 
     if retrieve_query:
+        logger.info(f"Information to retrieve: {retrieve_query}")
         final_user_response = retrieve_all_memory(db_instance, retrieve_query, logger)
     else:
         final_user_response = ""
@@ -177,8 +177,8 @@ def retrieve_all_memory(db_instance, retrieve_query: str, logger) -> str:
     return final_user_response
 
 def ltm_reorganization(db_instance, logger) -> None:
-    logger.info(f"More than 1000 instances, running long term memory reorganization module...")
-    latest_results = db_instance.get_latest_data()
+    logger.info(f"More than 100 instances, running long term memory reorganization module...")
+    latest_results = db_instance.get_latest_data(top_k=10)
     latest_content = [f"{idx + 1}. {el[0]}" for idx, el in enumerate(latest_results)]
     latest_content = "\n".join(latest_content)
     latest_ids = [el[1] for el in latest_results]

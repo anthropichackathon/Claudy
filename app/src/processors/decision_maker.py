@@ -13,7 +13,7 @@ load_dotenv()
 setup_openai()
 llm_setup = claude.get_anthropic()
 
-DATA_ROOT = "../data"
+DATA_ROOT = "data/"
 
 def run(processed_input: str):
     decision_response = claude.claude_call(

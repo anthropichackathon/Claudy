@@ -14,10 +14,9 @@ def calculate_cosine_similarity(vector1, vector2):
     similarity = cosine_similarity([vector1], [vector2])
     return similarity[0][0]
 
-
 class SingletonDataFrame:
     _instance = None
-    _filename = "../../memory.csv"
+    _filename = "memory.csv"
 
     def __new__(cls, *args, **kwargs):
         if not isinstance(cls._instance, cls):

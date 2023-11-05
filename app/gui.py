@@ -1,90 +1,52 @@
+import threading
 import tkinter as tk
 
-from dotenv import load_dotenv
+from src.processors.decision_maker import run
+from src.utils.tags import get_tag_content
 
-from app.src.KeyListener import KeyListener
-from app.src.buttons.Start import StartButton
-from app.src.buttons.Stop import StopButton
-
-load_dotenv()
-
-
-def start_key_listener():
-    start_button.config(state=tk.DISABLED)
-    stop_button.config(state=tk.NORMAL)
-    key_listener.start()
-
-
-def stop_key_listener():
-    stop_button.config(state=tk.DISABLED)
-    start_button.config(state=tk.NORMAL)
-    key_listener.stop()
-
-
-def on_close():
-    key_listener.stop()
-    root.destroy()
-
-
-# Create the main window
 root = tk.Tk()
 w = 480
-h = 320
+h = 480  # Increase the height of the window
 root.geometry(f"{w}x{h}")
-root.protocol("WM_DELETE_WINDOW", on_close)
 
-# Create the Text widget for logs
-log_text = tk.Text(root)
-log_text.grid(row=0, column=0, rowspan=6, sticky='nsew')
+output_text = tk.Text(root, state=tk.DISABLED)
+output_text.grid(row=3, column=0, sticky='nsew')  # Adjust the position of the output_text widget
 
-# Create a key listener
-key_listener = KeyListener(log_text)
-
-# Create the start button first without griding it
-start_button = StartButton(root, key_listener=key_listener)
-
-# Then create the stop button and pass the start button to it
-stop_button = StopButton(root, key_listener=key_listener, start_button=start_button)
-stop_button.grid(row=0, column=2, sticky='new')
-
-# Now grid the start button and pass the stop button to it
-start_button.stop_button = stop_button
-start_button.grid(row=0, column=1, sticky='new')
-
-# Create more buttons
-button2 = tk.Button(root, text='Daily summary')
-button2.grid(row=1, column=1, sticky='nsew', columnspan=2)
-
-button3 = tk.Button(root, text='Consolidate knowledge')
-button3.grid(row=2, column=1, sticky='nsew', columnspan=2)
-
-button4 = tk.Button(root, text='Help me')
-button4.grid(row=3, column=1, sticky='nsew', columnspan=2)
-
-button5 = tk.Button(root, text='Voice')
-button5.grid(row=4, column=1, sticky='sew')
-
-button6 = tk.Button(root, text='Snip')
-button6.grid(row=4, column=2, sticky='sew')
-
-# Create input for text
 input_text = tk.Entry(root)
-input_text.grid(row=5, column=0, sticky='nsew')
+input_text.grid(row=4, column=0, sticky='nsew')  # Adjust the position of the input_text widget
 
-# Create button for inputting image
-input_button = tk.Button(root, text='Input Image')
-input_button.grid(row=5, column=1, columnspan=2, sticky='ew')
+root.grid_rowconfigure(3, weight=1)  # Add this line
+root.grid_rowconfigure(4, weight=1)  # Add this line
+root.grid_columnconfigure(0, weight=1)  # Add this line
 
-root.grid_rowconfigure(0, weight=1)  # make the Text widget expandable
-root.grid_rowconfigure(1, weight=1)
-root.grid_rowconfigure(2, weight=1)
-root.grid_rowconfigure(3, weight=1)
-root.grid_rowconfigure(4, weight=1)
-root.grid_rowconfigure(5, weight=1)
+input_text.focus_set()  # Set the focus to the input_text widget
 
-root.grid_columnconfigure(0, weight=1)
-root.grid_columnconfigure(1, weight=0)
-root.grid_columnconfigure(2, weight=0)
 
-# Run the GUI
+def backend_function(event):
+    # This is your backend function
+    input_val = input_text.get().strip()
+    output = f"User: {input_val}\n"
+    output_text.config(state=tk.NORMAL)
+    output_text.delete("1.0", tk.END)
+    output_text.insert(tk.END, output + '\n')
+    output_text.insert(tk.END, "Thinking...\n")
+    output_text.config(state=tk.DISABLED)
+    input_text.delete(0, 'end')
+    # use threading to handle the time-consuming function
+    thread = threading.Thread(target=run_function, args=(input_val,))
+    thread.start()
+
+
+def run_function(input_val):
+    res = get_tag_content(run(input_val), "response")
+    assistant_response = "Assistant: " + res
+    output_text.config(state=tk.NORMAL)
+    output_text.delete("1.0", tk.END)
+    output_text.insert(tk.END, f"User: {input_val}\n")
+    output_text.insert(tk.END, assistant_response + '\n')
+    output_text.config(state=tk.DISABLED)
+
+
+input_text.bind('<Return>', backend_function)
+
 root.mainloop()

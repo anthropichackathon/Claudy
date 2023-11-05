@@ -6,7 +6,7 @@ import app.src.utils.update as update
 
 
 def run(user_input: str):
-    bio_path = "../data/bio/bio/BIO.xml"
+    bio_path = "data/bio/bio/BIO.xml"
     if os.path.exists(bio_path):
         return
 

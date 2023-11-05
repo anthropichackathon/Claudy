@@ -1,6 +1,6 @@
 import app.src.utils.tags as tags
 
-DATA_ROOT = "../../data"
+DATA_ROOT = "data"
 
 def bio_update(claude_response):
     bio_template = open(f"{DATA_ROOT}/bio/BIO_template.xml", "r").read()

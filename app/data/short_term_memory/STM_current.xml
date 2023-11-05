@@ -3,10 +3,10 @@
         This is a short-term memory of the AI assistant. It is used to store the latest information. The memory contains 10 slots for most current topics.
     </context>
     <memory_slots>
-        <slot_1></slot_1>
-        <slot_2></slot_2>
-        <slot_3></slot_3>
-        <slot_4></slot_4>
+        <slot_1>My dog is dirty and made everywhere poe prints</slot_1>
+        <slot_2>enjoy hiking</slot_2>
+        <slot_3>reading about emerging tech trends</slot_3>
+        <slot_4>volunteering at my local coding bootcamp</slot_4>
         <slot_5></slot_5>
         <slot_6></slot_6>
         <slot_7></slot_7>

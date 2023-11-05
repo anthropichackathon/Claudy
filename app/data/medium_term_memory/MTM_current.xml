@@ -3,11 +3,12 @@
         This is a medium term memory of the AI assistant. It is used to store the general information regarding the closer future. The memory contains 3 defined topics.
     </context>
     <to_do_list>
-- Paint living room
-- Go to the vet with my dog
+            <item>Clean the house</item>
         </to_do_list>
-    <goals_with_deadlines></goals_with_deadlines>
+    <goals_with_deadlines>
+            <goal>Finish project report by Friday</goal>
+        </goals_with_deadlines>
     <reminders>
-- My mam is sick
+            <reminder>Mom's birthday next week</reminder>
         </reminders>
 </medium_term_memory>

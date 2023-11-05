@@ -1,9 +1,10 @@
 from anthropic import HUMAN_PROMPT, AI_PROMPT
 
-short_term_memory_template = open("../data/short_term_memory/STM_template.xml", "r").read()
-medium_term_memory_template = open("../data/medium_term_memory/MTM_template.xml", "r").read()
-long_term_memory_template = open("../data/long_term_memory/LTM_template.xml", "r").read()
-bio_template = open("../data/bio/bio_template.xml", "r").read()
+data_root = "../../data"
+short_term_memory_template = open(f"{data_root}/short_term_memory/STM_template.xml", "r").read()
+medium_term_memory_template = open(f"{data_root}/medium_term_memory/MTM_template.xml", "r").read()
+long_term_memory_template = open(f"{data_root}/long_term_memory/LTM_template.xml", "r").read()
+bio_template = open(f"{data_root}/bio/bio_template.xml", "r").read()
 def bio_prompt(input):
     prompt = f"{HUMAN_PROMPT}<user_input>{input}</user_input>\n\n<templates>{bio_template}\n{short_term_memory_template}</templates>\n\n<instruction>You are AI assistant inside the personal notes app. The app was just open for the first time. Your job is to fill the templates of the bio and the short term memory, based on the user input. The things that user provided in his input and may be relevant for him (that he would not like to forget), that should not be stored in the bio as the context who they are store inside the slots of short term memory. Do not repeat information from bio in the short term memory</instruction>{AI_PROMPT}"
     return prompt
@@ -29,45 +30,7 @@ def retrieve_prompt(user_query):
     return prompt
 
 def stm_cleanup_prompt(stm_current):
-    prompt = f"""{HUMAN_PROMPT}\n\n<templates>{medium_term_memory_template} {long_term_memory_template}</templates>\n\n<instruction>You are AI assistant inside the personal notes app. This is current short_term_memory {stm_current}. Your job is to decide where each information from each slot should go. The information that is relevant to the categories defined in the medium term memory (to do list, goals with deadlines and reminders) should be inserted inside the relevant tags inside the medium term memory template. Other information (not specific plans) regarding the future, that user probably would like to retrieve in the future should be placed in the long term memory. Place each specific topic between separate chunk tags. Please return the filled templates in the same format. You can regard the information that is not relevant to the future and does not fit into short-term memory anymore, such as information of the current emotional state of the user or other people from his/her life. Do not place facts that are true only for the current time, such as 'my house is dirty' into long-term memory. If there is information about something to do place it into the medium-term memory.</instruction>\n<example>    <memory_slots>
-            ...
-            <slot_1>I am hungry, I think I could eat a sandwich</slot_1>
-            <slot_2>I have not cleaned my kitchen for ages, and my sink is overflowing with dirty dishes. I am so lazy.</slot_2>
-            <slot_3>My boss is mad at me.</slot_3>
-            <slot_4>I have a lot of paperwork to do.</slot_4>
-            <slot_5>My cat is so cute. I love my cat.</slot_5>
-            <slot_6>I have to clean the dishes.</slot_6>
-            <slot_7>I have to buy some food.</slot_7>
-            <slot_8></slot_8>
-            <slot_9></slot_9>
-            <slot_10></slot_10>
-            ...
-            Response:
-            <short_term_memory>
-        <context>
-            This is a short memory of the AI assistant. It is used to store the latest information. The memory contains 10 slots for most current topics.
-        </context>
-        <daily_to_do_list>
-        -Do the paperwork
-        -Buy food and eat something
-        -Clean the kitchen and the dishes
-        </daily_to_do_list>
-        <goals_with_deadlines></goals_with_deadlines>
-        <reminders></reminders>
-    </short_term_memory>
-    <long_term_memory>
-        <context>
-            This is a long-term memory of the AI assistant. It is used to store information that will be passed to the vector database. Each chunk is a piece of information that will be stored in the vector database.
-        </context>
-        <chunks>
-            <chunk>My boss is mad at me.</chunk>
-            <chunk>My cat is so cute. I love my cat.</chunk>
-        </chunks>
-    </long_term_memory>
-    
-        </memory_slots>
-    
-        </example>{AI_PROMPT}"""
+    prompt = f"""{HUMAN_PROMPT}\n\n<templates>{medium_term_memory_template} {long_term_memory_template}</templates>\n\n<instruction>You are AI assistant inside the personal notes app. This is current short_term_memory {stm_current}. Your job is to decide where each information from each slot should go. The information that is relevant to the categories defined in the medium term memory (to do list, goals with deadlines and reminders) should be inserted inside the relevant tags inside the medium term memory template. Other information (not specific plans) regarding the future, that user probably would like to retrieve in the future should be placed in the long term memory. Place each specific topic between separate chunk tags. Please return the filled templates in the same format. You can regard the information that is not relevant to the future and does not fit into short-term memory anymore, such as information of the current emotional state of the user or other people from his/her life. Do not place facts that are true only for the current time, such as 'my house is dirty' into long-term memory. If there is information about something to do place it into the medium-term memory.</instruction>{AI_PROMPT}"""
     return prompt
 
 def stm_update_prompt(stm_current, input):

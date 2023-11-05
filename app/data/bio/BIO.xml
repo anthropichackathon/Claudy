@@ -2,9 +2,17 @@
     <context>
         This section contains the information about the user.
     </context>
-    <personal_background>I am 30 years old.</personal_background>
-    <professional_background>I work as accountant.</professional_background>
-    <name>John</name>
-    <life_goals>My goal is to become professional chef.</life_goals>
-    <other_info>My favorite color is blue, and I like to play tennis.</other_info>
+    <personal_background>
+        I was born on April 15, 1975 in Portland, Oregon as the only child of Mary and Robert Smith. My high school years at Lincoln High were instrumental in shaping my passion for English literature. I found myself captivated by the works of Ernest Hemingway and F. Scott Fitzgerald, which played a significant role in honing my writing style.
+    </personal_background>
+    <professional_background>
+        My career began as a journalist for The Boston Globe. My articles, which often centered around environmental issues, were highly acclaimed and well-received. However, my true calling was storytelling, and I yearned to create my own world of characters. Following this passion, I left my job in 2002 to focus on writing my debut novel. 
+    </professional_background>
+    <name>Robert Smith</name>
+    <life_goals>
+        I firmly believe that one person can indeed make a difference. Through my words, both written and spoken, I strive to influence and inspire, leaving an indelible mark on literature and environmental activism.
+    </life_goals>
+    <other_info>
+        In 2000, I married my college sweetheart, Emily, and we've been blessed with two wonderful children. They are my main source of inspiration and motivation. Recently, I've ventured into public speaking, delivering speeches on the importance of preserving our environment and leveraging literature as a tool for social change. I've also started teaching creative writing at Harvard, hoping to inspire the next generation of writers.
+    </other_info>
 </bio>

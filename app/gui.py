@@ -1,6 +1,5 @@
 import threading
 import tkinter as tk
-from ttkthemes import ThemedTk
 
 import pyperclip
 from pynput import keyboard
@@ -15,8 +14,8 @@ def bio_function(input_val):
 
 
 def new_window_function():
-    new_window = tk.Toplevel(root)  # Create a new window
-    new_window.geometry("480x480")  # Set the size of the new window
+    new_window = tk.Toplevel(root)
+    new_window.geometry("480x480")
 
     new_input_text = tk.Text(new_window)
     new_input_text.pack(expand=True, fill=tk.BOTH)
@@ -24,28 +23,24 @@ def new_window_function():
     new_input_text.focus_set()
 
     def on_enter(event):
-        # Create text widget to display "Thinking..."
         new_output_text = tk.Text(new_window)
         new_output_text.pack()
         new_output_text.insert(tk.END, "Thinking...\n")
 
-        # Run bio function in separate thread
-
         thread = threading.Thread(target=bio_function, args=(new_input_text.get("1.0", "end-1c"),))
         thread.start()
 
-        # After the function call, you can close the window
-        new_window.after(5000, new_window.destroy)  # Delay the destruction of the window by 5 seconds
+        new_window.after(5000, new_window.destroy)
 
     new_input_text.bind('<Return>', on_enter)
 
 
 root = tk.Tk()
 w = 480
-h = 480  # Increase the height of the window
+h = 480
 root.geometry(f"{w}x{h}")
 
-root.withdraw()  # Hide the window initially
+root.withdraw()
 
 output_text = tk.Text(root, state=tk.DISABLED)
 output_text.grid(row=3, column=0, sticky='nsew')
@@ -59,15 +54,12 @@ root.grid_columnconfigure(0, weight=1)
 
 input_text.focus_set()
 
-# Create a menu bar
 menu_bar = tk.Menu(root)
 root.config(menu=menu_bar)
 
-# Create a dropdown menu
 file_menu = tk.Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="BIO", menu=file_menu)
 
-# Add an item to the dropdown menu that calls new_window_function
 file_menu.add_command(label="Tell me about yourself", command=new_window_function)
 
 
@@ -94,28 +86,31 @@ def run_function(input_val):
     output_text.config(state=tk.DISABLED)
 
 
+current_keys = set()
+
+
 def toggle_app_window():
-    if root.state() == 'withdrawn':
+    if root.state() in ['withdrawn', 'iconic']:
         root.deiconify()
     else:
         root.withdraw()
+    current_keys.clear()
 
 
 def paste_from_clipboard():
-    if root.state() == 'withdrawn':
+    if root.state() in ['withdrawn', 'iconic']:
         root.deiconify()
     root.after(100, lambda: input_text.focus_force())
     input_text.delete(0, tk.END)
     input_text.insert(tk.END, pyperclip.paste())
-    backend_function(None)  # Process the pasted text
+    backend_function(None)
+    current_keys.clear()
 
 
 COMBINATIONS = {
     frozenset([keyboard.Key.shift, keyboard.Key.alt_l, keyboard.KeyCode.from_char('t')]): toggle_app_window,
     frozenset([keyboard.Key.shift, keyboard.Key.alt_l, keyboard.KeyCode.from_char('v')]): paste_from_clipboard
 }
-
-current_keys = set()
 
 
 def on_press(key):
@@ -135,5 +130,8 @@ listener = keyboard.Listener(on_press=on_press, on_release=on_release)
 listener.start()
 
 input_text.bind('<Return>', backend_function)
+
+# This is the new line to intercept the "X" button
+root.protocol("WM_DELETE_WINDOW", toggle_app_window)
 
 root.mainloop()

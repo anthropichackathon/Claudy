@@ -1,5 +1,6 @@
 import threading
 import tkinter as tk
+from ttkthemes import ThemedTk
 
 import pyperclip
 from pynput import keyboard
